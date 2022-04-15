@@ -9,7 +9,7 @@ const bootstrap = async () => {
   app.useGlobalPipes(new ValidationPipe())
   app.use(cookieParser())
 
-  await app.listen(3000, () => {
+  await app.listen(1557, () => {
     console.log('🚀 Server ready at: http://localhost:3000/graphql')
   })
 }

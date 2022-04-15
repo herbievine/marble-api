@@ -1,34 +1,41 @@
-import { Injectable, Logger, NotFoundException } from '@nestjs/common'
-import { toApolloError } from 'apollo-server-errors'
+import { BadRequestException, Injectable } from '@nestjs/common'
+import { Prisma } from '@prisma/client'
 import { PrismaService } from 'src/prisma/prisma.service'
-import { UserCreateDto } from './user.dto'
+import { CreateOrLoginUserDto } from './user.dto'
 import { User } from './user.entity'
 
 @Injectable()
 export class UsersService {
   constructor(private readonly prismaService: PrismaService) {}
 
-  public async getUser(email: string): Promise<User> {
-    const { user } = this.prismaService
+  public async createOrLoginUser(payload: CreateOrLoginUserDto): Promise<User> {
+    const { user: userService } = this.prismaService
 
-    const query = await user.findUnique({ where: { email } })
+    const { schoolId, ...data } = payload
 
-    if (query === null) {
-      throw toApolloError(
-        new NotFoundException(`User with email ${email} not found`)
-      )
+    let user: User
+
+    try {
+      user = await userService.create({
+        data: {
+          ...data,
+          schoolId: +schoolId
+        }
+      })
+    } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        if (error.code === 'P2002') {
+          user = await userService.findUnique({
+            where: {
+              didToken: payload.didToken
+            }
+          })
+        }
+      } else {
+        throw new BadRequestException()
+      }
     }
 
-    return query
-  }
-
-  public async createUser(payload: UserCreateDto): Promise<User> {
-    const { user } = this.prismaService
-
-    return user.create({
-      data: {
-        ...payload
-      }
-    })
+    return user
   }
 }

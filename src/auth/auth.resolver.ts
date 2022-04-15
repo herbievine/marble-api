@@ -1,8 +1,8 @@
-import { Args, Context, Mutation, Resolver } from '@nestjs/graphql'
-import { ForbiddenError } from 'apollo-server-express'
+import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql'
+import { ForbiddenError } from 'apollo-server-errors'
 import { cookieConfig } from 'src/config'
-import { UserCreateDto, UserLoginDto } from 'src/users/user.dto'
 import { User } from 'src/users/user.entity'
+import { CreateOrUpdateUserDto } from './auth.dto'
 import { AuthenticatedUser } from './auth.entity'
 import { AuthService } from './auth.service'
 import { Auth } from './auth.types'
@@ -11,31 +11,26 @@ import { Auth } from './auth.types'
 export class AuthResolver {
   constructor(private readonly authService: AuthService) {}
 
-  @Mutation((returns) => AuthenticatedUser)
-  async register(
-    @Context() { res }: Auth.GqlContext,
-    @Args('payload', { type: () => UserCreateDto }) payload: UserCreateDto,
-    @Args('websitePassword', { type: () => String }) websitePassword: string
-  ): Promise<AuthenticatedUser> {
-    if (websitePassword !== process.env.WEBSITE_PASSWORD) {
-      throw new ForbiddenError('Unauthorized access')
-    }
-
-    const authenticatedUser = await this.authService.register(payload)
-
-    res.cookie('jwt', authenticatedUser.jwt, cookieConfig)
-
-    return authenticatedUser
+  @Query(() => String)
+  sayHello(): string {
+    return 'Hello World!'
   }
 
   @Mutation((returns) => AuthenticatedUser)
   async login(
-    @Context() { res }: Auth.GqlContext,
-    @Args('payload', { type: () => UserLoginDto }) payload: UserLoginDto
+    @Context() { req, res }: Auth.GqlContext,
+    @Args('payload', { type: () => CreateOrUpdateUserDto })
+    payload: CreateOrUpdateUserDto
   ): Promise<AuthenticatedUser> {
-    const authenticatedUser = await this.authService.login(payload)
+    const didToken = req.headers.authorization?.substring(7)
 
-    res.cookie('jwt', authenticatedUser.jwt, cookieConfig)
+    if (!didToken) {
+      throw new ForbiddenError('Unauthorized access')
+    }
+
+    const authenticatedUser = await this.authService.login(payload, didToken)
+
+    // res.cookie('jwt', authenticatedUser.jwt, cookieConfig)
 
     return authenticatedUser
   }

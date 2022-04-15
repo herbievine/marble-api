@@ -3,8 +3,6 @@ import { GraphQLModule } from '@nestjs/graphql'
 import { ThrottlerModule } from '@nestjs/throttler'
 import { join } from 'path'
 import { PrismaService } from './prisma/prisma.service'
-import { PostsModule } from './posts/posts.module'
-import { CategoriesModule } from './categories/categories.module'
 import { UsersModule } from './users/users.module'
 import { AuthModule } from './auth/auth.module'
 import { ConfigModule } from '@nestjs/config'
@@ -17,7 +15,7 @@ import { ConfigModule } from '@nestjs/config'
       cors: {
         origin:
           process.env.NODE_ENV === 'production'
-            ? '.herbievine.com'
+            ? '.marble.com'
             : 'http://localhost:4000',
         credentials: true
       }
@@ -27,8 +25,6 @@ import { ConfigModule } from '@nestjs/config'
       limit: 20
     }),
     ConfigModule.forRoot(),
-    PostsModule,
-    CategoriesModule,
     UsersModule,
     AuthModule
   ],

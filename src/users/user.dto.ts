@@ -1,14 +1,18 @@
 import { InputType, Field } from '@nestjs/graphql'
-import { IsString, IsOptional, Matches } from 'class-validator'
+import { IsOptional, IsString, Matches } from 'class-validator'
 
-@InputType('UserCreateDto')
-export class UserCreateDto {
-  @IsString()
-  @Matches(/^[a-zA-z]{2}[0-9]{6}$/g)
+@InputType('CreateOrLoginUserDto')
+export class CreateOrLoginUserDto {
+  @Matches(/^[0-9]{4}$/g)
   @Field()
-  id: string
+  schoolId: string
 
   @IsOptional()
+  @Matches(/^[a-zA-Z0-9]\w+$/g)
   @Field((type) => String, { nullable: true })
   username?: string
+
+  @IsString()
+  @Field()
+  didToken: string
 }

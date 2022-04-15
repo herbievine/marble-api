@@ -2,11 +2,10 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type CategoryEntity {
-  id: String!
-  name: String!
-  color: String!
-  posts: [PostEntity!]
+type UserEntity {
+  schoolId: Float!
+  username: String
+  didToken: String!
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -16,87 +15,20 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
-type PostEntity {
-  id: String!
-  title: String!
-  slug: String!
-  description: String!
-  relativeImage: String!
-  rawMdx: String!
-  published: Boolean!
-  views: Int!
-  likes: Int!
-  categories: [CategoryEntity!]
-  createdAt: DateTime!
-  updatedAt: DateTime!
-}
-
-type UserEntity {
-  id: String!
-  name: String!
-  email: String!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-}
-
-type AuthenticatedUserEntity {
-  jwt: String!
+type AuthenticatedUser {
   user: UserEntity!
+  jwt: String!
 }
 
 type Query {
-  posts: [PostEntity!]!
-  post(slug: String!): PostEntity!
-  categories: [CategoryEntity!]!
-  category(name: String!): CategoryEntity!
+  sayHello: String!
 }
 
 type Mutation {
-  createPost(relations: [CategoryCreateDto!], payload: PostCreateDto!): PostEntity!
-  updatePost(relations: [CategoryCreateDto!], payload: PostUpdateDto!, id: String!): PostEntity!
-  deletePost(id: String!): PostEntity!
-  createCategory(relations: [PostCreateDto!], payload: CategoryCreateDto!): CategoryEntity!
-  updateCategory(relations: [PostCreateDto!], payload: CategoryUpdateDto!, id: String!): CategoryEntity!
-  deleteCategory(id: String!): CategoryEntity!
-  register(websitePassword: String!, payload: UserCreateDto!): AuthenticatedUserEntity!
-  login(payload: UserLoginDto!): AuthenticatedUserEntity!
+  login(payload: CreateOrUpdateUserDto!): AuthenticatedUser!
 }
 
-input CategoryCreateDto {
-  name: String!
-  color: String!
-}
-
-input PostCreateDto {
-  title: String!
-  slug: String
-  description: String!
-  relativeImage: String!
-  rawMdx: String!
-  published: Boolean
-}
-
-input PostUpdateDto {
-  title: String
-  slug: String
-  description: String
-  relativeImage: String
-  rawMdx: String
-  views: Int
-}
-
-input CategoryUpdateDto {
-  name: String
-  color: String
-}
-
-input UserCreateDto {
-  name: String!
-  email: String!
-  password: String!
-}
-
-input UserLoginDto {
-  email: String!
-  password: String!
+input CreateOrUpdateUserDto {
+  schoolId: String!
+  username: String
 }

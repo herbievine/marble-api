@@ -1,32 +1,11 @@
-import { User } from 'src/users/user.entity'
-import { Request as ExpressRequest, Response as ExpressResponse } from 'express'
+import { GraphQLExecutionContext } from '@nestjs/graphql'
+import { Request, Response } from 'express'
 
-export namespace Auth {
-  type CleanUser = Omit<User, 'password'>
-
-  type BasicUser = {
-    email: string
-    password: string
-  }
-
-  type JwtPayload = {
-    email: string
-    password: string
-  }
-
-  type DecodedJwt = {
-    id: string
-    email: string
-    iat: number
-    exp: number
-  }
-
-  interface Request extends ExpressRequest {
-    user?: User
-  }
-
+namespace Auth {
   interface GqlContext extends GraphQLExecutionContext {
-    req: ExpressRequest
-    res: ExpressResponse
+    req: Request
+    res: Response
   }
 }
+
+export { Auth }
