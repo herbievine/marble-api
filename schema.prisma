@@ -17,17 +17,17 @@ model User {
   // transactions Transaction[]
   // department   Department?   @relation(fields: [departmentId], references: [id])
   // departmentId String?
-  // school       School?       @relation(fields: [schoolId], references: [id])
+  school    School   @relation(fields: [schoolId], references: [id])
   schoolId  Int
 }
 
-// model School {
-//   id          Int      @id
-//   emailPolicy String
-//   createdAt   DateTime @default(now()) @map("created_at")
-//   updatedAt   DateTime @updatedAt @map("updated_at")
-//   users       User[]
-// }
+model School {
+  id          Int      @id
+  emailPolicy String
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+  users       User[]
+}
 
 // model Transaction {
 //   id        String   @id @default(uuid())

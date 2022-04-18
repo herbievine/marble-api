@@ -2,10 +2,10 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type UserEntity {
-  schoolId: Float!
-  username: String
-  didToken: String!
+type SchoolEntity {
+  id: Float!
+  emailPolicy: String!
+  users: [UserEntity!]
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -14,6 +14,16 @@ type UserEntity {
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
 scalar DateTime
+
+type UserEntity {
+  uuid: String!
+  schoolId: Float!
+  username: String
+  didToken: String!
+  school: SchoolEntity!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
 
 type AuthenticatedUser {
   user: UserEntity!
@@ -25,10 +35,9 @@ type Query {
 }
 
 type Mutation {
-  login(payload: CreateOrUpdateUserDto!): AuthenticatedUser!
+  login(payload: LoginAuthDto!): AuthenticatedUser!
 }
 
-input CreateOrUpdateUserDto {
+input LoginAuthDto {
   schoolId: String!
-  username: String
 }

@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import { magic } from 'src/magic'
 import { UsersService } from 'src/users/users.service'
-import { CreateOrUpdateUserDto } from './auth.dto'
+import { LoginAuthDto } from './auth.dto'
 import { AuthenticatedUser } from './auth.entity'
 
 @Injectable()
@@ -9,16 +9,10 @@ export class AuthService {
   constructor(private readonly usersService: UsersService) {}
 
   public async login(
-    payload: CreateOrUpdateUserDto,
+    payload: LoginAuthDto,
     didToken: string
   ): Promise<AuthenticatedUser> {
-    console.log(magic().secretApiKey)
-
-    const s = magic().token.validate(didToken)
-
-    console.log(s)
-
-    const user = await this.usersService.createOrLoginUser({
+    const user = await this.usersService.login({
       ...payload,
       didToken
     })

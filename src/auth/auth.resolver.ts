@@ -2,7 +2,7 @@ import { Args, Context, Mutation, Query, Resolver } from '@nestjs/graphql'
 import { ForbiddenError } from 'apollo-server-errors'
 import { cookieConfig } from 'src/config'
 import { User } from 'src/users/user.entity'
-import { CreateOrUpdateUserDto } from './auth.dto'
+import { LoginAuthDto } from './auth.dto'
 import { AuthenticatedUser } from './auth.entity'
 import { AuthService } from './auth.service'
 import { Auth } from './auth.types'
@@ -19,8 +19,8 @@ export class AuthResolver {
   @Mutation((returns) => AuthenticatedUser)
   async login(
     @Context() { req, res }: Auth.GqlContext,
-    @Args('payload', { type: () => CreateOrUpdateUserDto })
-    payload: CreateOrUpdateUserDto
+    @Args('payload', { type: () => LoginAuthDto })
+    payload: LoginAuthDto
   ): Promise<AuthenticatedUser> {
     const didToken = req.headers.authorization?.substring(7)
 
