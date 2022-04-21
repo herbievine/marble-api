@@ -6,6 +6,7 @@ import { PrismaService } from './prisma/prisma.service'
 import { UsersModule } from './users/users.module'
 import { AuthModule } from './auth/auth.module'
 import { ConfigModule } from '@nestjs/config'
+import { SchoolModule } from './school/school.module';
 
 @Module({
   imports: [
@@ -26,7 +27,8 @@ import { ConfigModule } from '@nestjs/config'
     }),
     ConfigModule.forRoot(),
     UsersModule,
-    AuthModule
+    AuthModule,
+    SchoolModule
   ],
   providers: [PrismaService]
 })

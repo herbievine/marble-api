@@ -14,7 +14,10 @@ export class User {
   username?: string
 
   @Field()
-  didToken: string
+  amount: number
+
+  @Field()
+  publicAddress: string
 
   @Field((type) => School)
   school: School

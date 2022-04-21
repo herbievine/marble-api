@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common'
 import { Prisma } from '@prisma/client'
 import { PrismaService } from 'src/prisma/prisma.service'
-import { LoginUserDto } from './user.dto'
+import { LoginUserDto, UpdateUserDto } from './user.dto'
 import { User } from './user.entity'
 
 @Injectable()
@@ -11,14 +11,14 @@ export class UsersService {
   public async login(payload: LoginUserDto): Promise<User> {
     const { user: userService } = this.prismaService
 
-    const { didToken, schoolId } = payload
+    const { publicAddress, schoolId } = payload
 
     let user: User
 
     try {
       user = await userService.create({
         data: {
-          didToken,
+          publicAddress,
           school: {
             connect: {
               id: +schoolId
@@ -34,7 +34,7 @@ export class UsersService {
         if (error.code === 'P2002') {
           user = await userService.findUnique({
             where: {
-              didToken
+              publicAddress
             },
             include: {
               school: true
@@ -44,6 +44,32 @@ export class UsersService {
       } else {
         throw new BadRequestException()
       }
+    }
+
+    return user
+  }
+
+  public async updateUser(payload: UpdateUserDto): Promise<User> {
+    const { user: userService } = this.prismaService
+
+    const { publicAddress, username } = payload
+
+    let user: User
+
+    try {
+      user = await userService.update({
+        where: {
+          publicAddress
+        },
+        data: {
+          username
+        },
+        include: {
+          school: true
+        }
+      })
+    } catch (err) {
+      console.log(err)
     }
 
     return user

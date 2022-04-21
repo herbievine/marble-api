@@ -1,5 +1,10 @@
 import { InputType, Field } from '@nestjs/graphql'
-import { IsOptional, IsString, Matches } from 'class-validator'
+import {
+  IsEthereumAddress,
+  IsOptional,
+  IsString,
+  Matches
+} from 'class-validator'
 
 @InputType('LoginUserDto')
 export class LoginUserDto {
@@ -7,7 +12,18 @@ export class LoginUserDto {
   @Field()
   schoolId: string
 
-  @IsString()
+  @IsEthereumAddress()
   @Field()
-  didToken: string
+  publicAddress: string
+}
+
+@InputType('UpdateUserDto')
+export class UpdateUserDto {
+  @Matches(/^[a-zA-Z0-9]\w+$/)
+  @Field((type) => String)
+  username: string
+
+  @IsEthereumAddress()
+  @Field()
+  publicAddress: string
 }

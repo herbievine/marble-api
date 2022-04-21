@@ -19,7 +19,8 @@ type UserEntity {
   uuid: String!
   schoolId: Float!
   username: String
-  didToken: String!
+  amount: Float!
+  publicAddress: String!
   school: SchoolEntity!
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -36,8 +37,18 @@ type Query {
 
 type Mutation {
   login(payload: LoginAuthDto!): AuthenticatedUser!
+  updateUser(payload: UpdateAuthDto!): AuthenticatedUser!
+  getSchool(payload: SchoolPolicyDto!): SchoolEntity!
 }
 
 input LoginAuthDto {
+  schoolId: String!
+}
+
+input UpdateAuthDto {
+  username: String!
+}
+
+input SchoolPolicyDto {
   schoolId: String!
 }
